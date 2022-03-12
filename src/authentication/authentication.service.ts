@@ -6,9 +6,7 @@ import { User } from "../users/user.entity";
 import { AuthDto } from "./dto/auth.dto";
 import { TokenDto } from "./dto/token.dto";
 import { RegisterDto } from "./dto/register.dto";
-import EmailService from "../email/email.service";
 import { ConfigService } from "@nestjs/config";
-import PostgresErrorCode from "../database/postgresErrorCode.enum";
 import { TUserId } from "../users/interfaces/user-id.interface";
 
 @Injectable()
@@ -17,7 +15,6 @@ export class AuthenticationService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-    private emailService: EmailService,
     private readonly configService: ConfigService
   ) {
   }
@@ -49,7 +46,6 @@ export class AuthenticationService {
   }
 
   async registration(registerDto: RegisterDto): Promise<TokenDto> {
-    console.log("registration", registerDto);
     const hashedPassword = await bcrypt.hash(
       registerDto.password, 10
     );
@@ -57,17 +53,12 @@ export class AuthenticationService {
       const user = await this.usersService.create({
         ...registerDto, password: hashedPassword
       });
-      await this.emailService.sendActivationMail({
-        to: user.email,
-        link: "https://www.google.com/"
-      });
       delete user.password;
       return this.generateTokens(user.id);
     } catch (error) {
       if (error?.status === 400) {
         throw new HttpException("Пользователь с таким логином или почтой уже создан", HttpStatus.BAD_REQUEST);
       }
-      console.log(error, error.code);
       throw new HttpException("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -133,9 +124,7 @@ export class AuthenticationService {
   }
 
   public async validateRefreshToken(token: string) {
-
     const secret = this.configService.get("JWT_REFRESH_TOKEN_SECRET");
-    console.log("validateRefreshToken", token, secret);
     return this.jwtService.verify(token, secret);
   }
 }

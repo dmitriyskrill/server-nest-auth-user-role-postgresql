@@ -44,8 +44,7 @@ export class UsersService {
   async getUserIfRefreshTokenMatches(refreshToken: string, userId: number) {
 
     const user = await this.getById(userId);
-    console.log('getUserIfRefreshTokenMatches', user, refreshToken,userId);
-    const isRefreshTokenMatching = await bcrypt.compare(
+   const isRefreshTokenMatching = await bcrypt.compare(
       refreshToken,
       user.currentHashedRefreshToken
     );
@@ -59,6 +58,12 @@ export class UsersService {
     const currentHashedRefreshToken = await bcrypt.hash(refreshToken, 10);
     await this.usersRepository.update(userId, {
       currentHashedRefreshToken
+    });
+  }
+
+  async markEmailAsConfirmed(email: string){
+    return this.usersRepository.update({ email }, {
+      isEmailConfirmed: true
     });
   }
 

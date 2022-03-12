@@ -3,7 +3,7 @@ import { AuthenticationService } from "./authentication.service";
 import { AuthenticationController } from "./authentication.controller";
 import { UsersModule } from "../users/users.module";
 import { JwtModule } from "@nestjs/jwt";
-import { EmailModule } from "../email/email.module";
+import { EmailConfirmationModule } from "../emailConfirmation/emailConfirmation.module";
 import { ConfigModule } from "@nestjs/config";
 import { LocalStrategy } from "./local.strategy";
 import { JwtRefreshTokenStrategy } from "./jwt-refresh-token.strategy";
@@ -13,7 +13,7 @@ import { PassportModule } from "@nestjs/passport";
 @Module({
   imports: [
     ConfigModule,
-    EmailModule,
+    EmailConfirmationModule,
     forwardRef(() => UsersModule),
     JwtModule.register({}),
     PassportModule,

@@ -1,27 +1,17 @@
 import {
-  Body, ClassSerializerInterceptor,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Post,
-  Req,
-  Res,
-  UseGuards,
-  UseInterceptors
+  Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards
 } from "@nestjs/common";
 import { AuthDto } from "./dto/auth.dto";
 import { AuthenticationService } from "./authentication.service";
 import { ApiTags } from "@nestjs/swagger";
 import RegisterDto from "./dto/register.dto";
 import JwtRefreshGuard from "./jwt-refresh.guard";
-import { Response, Request } from "express";
+import { Response } from "express";
 import { LocalAuthenticationGuard } from "./localAuthentication.guard";
 import JwtAuthenticationGuard from "./jwt-authentication.guard";
 import RequestWithUser from "./interfaces/requestWithUser.interface";
 import { UsersService } from "../users/users.service";
-import { JwtService } from "@nestjs/jwt";
-import { ExtractJwt } from "passport-jwt";
+import { EmailConfirmationService } from "../emailConfirmation/emailConfirmation.service";
 import { ConfigService } from "@nestjs/config";
 
 @ApiTags("Авторизация")
@@ -31,7 +21,7 @@ export class AuthenticationController {
     private readonly authService: AuthenticationService,
     private readonly usersService: UsersService,
     private readonly configService: ConfigService,
-    private jwtService: JwtService
+    private readonly emailConfirmationService: EmailConfirmationService
   ) {
   }
 
@@ -63,6 +53,7 @@ export class AuthenticationController {
       "Set-Cookie",
       this.authService.getCookiesJwt(tokenDto)
     );
+    await this.emailConfirmationService.sendVerificationLink(registerDto.email);
     res.status(HttpStatus.CREATED).send(tokenDto);
   }
 

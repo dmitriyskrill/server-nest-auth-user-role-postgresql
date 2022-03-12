@@ -20,7 +20,6 @@ export default class EmailService {
   }
 
   async sendActivationMail({ to, link }) {
-    console.log('sendActivationMail 1');
     await this.nodemailerTransport.sendMail({
       from: this.configService.get("EMAIL_USER"),
       to,
@@ -34,7 +33,6 @@ export default class EmailService {
           </div>
         `
     });
-    console.log('sendActivationMail 2');
   }
 
   sendMail(options: Mail.Options) {

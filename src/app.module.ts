@@ -1,10 +1,8 @@
 import { Module } from "@nestjs/common";
-import { TypeOrmModule } from "@nestjs/typeorm";
-
 import { UsersModule } from "./users/users.module";
-import { User } from "./users/user.entity";
 import { AuthenticationModule } from './authentication/authentication.module';
 import { EmailModule } from './email/email.module';
+import { EmailConfirmationModule } from './emailConfirmation/emailConfirmation.module';
 import { ConfigModule } from "@nestjs/config";
 import * as Joi from '@hapi/joi';
 import { DatabaseModule } from "./database/database.module";
@@ -22,16 +20,21 @@ import { DatabaseModule } from "./database/database.module";
         EMAIL_SERVICE: Joi.string().required(),
         EMAIL_USER: Joi.string().required(),
         EMAIL_PASSWORD: Joi.string().required(),
+        JWT_VERIFICATION_TOKEN_SECRET: Joi.string().required(),
+        JWT_VERIFICATION_TOKEN_EXPIRATION_TIME: Joi.string().required(),
+        EMAIL_CONFIRMATION_URL: Joi.string().required(),
         JWT_REFRESH_TOKEN_SECRET: Joi.string().required(),
         JWT_REFRESH_TOKEN_EXPIRATION_TIME: Joi.string().required(),
         JWT_ACCESS_TOKEN_SECRET: Joi.string().required(),
         JWT_ACCESS_TOKEN_EXPIRATION_TIME: Joi.string().required(),
+        API_URL: Joi.string().required(),
       })
     }),
     DatabaseModule,
     UsersModule,
     AuthenticationModule,
-    EmailModule
+    EmailModule,
+    EmailConfirmationModule
   ],
   controllers: [],
   providers: []
