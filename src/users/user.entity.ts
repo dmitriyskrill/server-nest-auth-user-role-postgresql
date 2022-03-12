@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { validationOptions } from "./user.swagger";
+import { Exclude } from "class-transformer";
 
 @Entity()
 export class User {
@@ -22,7 +23,12 @@ export class User {
 
   @ApiProperty(validationOptions.password)
   @Column()
+  // @Exclude()
   public password: string;
+
+  @Column({ nullable: true })
+  // @Exclude()
+  public currentHashedRefreshToken?: string;
 
   @ApiProperty({ example: "true", description: "Забанен или нет" })
   @Column({ default: false })
