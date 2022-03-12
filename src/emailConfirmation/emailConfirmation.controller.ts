@@ -8,7 +8,7 @@ import {
 } from "@nestjs/common";
 import ConfirmEmailDto from './dto/confirmEmail.dto';
 import { EmailConfirmationService } from './emailConfirmation.service';
-import JwtAuthenticationGuard from '../authentication/jwt-authentication.guard';
+import JwtAuthenticationGuard from '../authentication/guards/jwt-authentication.guard';
 import RequestWithUser from '../authentication/interfaces/requestWithUser.interface';
 
 @Controller('email-confirmation')

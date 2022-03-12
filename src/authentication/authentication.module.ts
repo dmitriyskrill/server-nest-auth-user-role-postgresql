@@ -5,9 +5,9 @@ import { UsersModule } from "../users/users.module";
 import { JwtModule } from "@nestjs/jwt";
 import { EmailConfirmationModule } from "../emailConfirmation/emailConfirmation.module";
 import { ConfigModule } from "@nestjs/config";
-import { LocalStrategy } from "./local.strategy";
-import { JwtRefreshTokenStrategy } from "./jwt-refresh-token.strategy";
-import { JwtStrategy } from "./jwt.strategy";
+import { LocalStrategy } from "./strategies/local.strategy";
+import { JwtRefreshTokenStrategy } from "./strategies/jwt-refresh-token.strategy";
+import { JwtStrategy } from "./strategies/jwt.strategy";
 import { PassportModule } from "@nestjs/passport";
 
 @Module({
