@@ -58,14 +58,13 @@ export class AuthenticationController {
   }
 
   @UseGuards(JwtRefreshGuard)
-  @Get("/refresh")
-  async refreshAccessToken(@Req() request: RequestWithUser) {
+  @Get("/updateAccessCookie")
+  async updateAccessToken(@Req() request: RequestWithUser) {
     const accessTokenCookie = this.authService.generateAndGetCookieJwtAccessToken(
       request.user.id
     );
     request.res.setHeader("Set-Cookie", accessTokenCookie);
     return request.user;
-
   }
 
   @UseGuards(JwtAuthenticationGuard)
