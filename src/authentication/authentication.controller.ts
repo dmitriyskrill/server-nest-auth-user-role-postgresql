@@ -36,10 +36,6 @@ export class AuthenticationController {
     await this.usersService.setCurrentRefreshToken(
       tokenDto.refreshToken, tokenDto.userId
     );
-    res.setHeader(
-      "Set-Cookie",
-      this.authService.getCookiesJwt(tokenDto)
-    );
     res.status(HttpStatus.CREATED).send(tokenDto);
   }
 
@@ -49,22 +45,14 @@ export class AuthenticationController {
     @Res() res: Response
   ) {
     const tokenDto = await this.authService.registration(registerDto);
-    res.setHeader(
-      "Set-Cookie",
-      this.authService.getCookiesJwt(tokenDto)
-    );
     await this.emailConfirmationService.sendVerificationLink(registerDto.email);
     res.status(HttpStatus.CREATED).send(tokenDto);
   }
 
   @UseGuards(JwtRefreshGuard)
-  @Get("/updateAccessCookie")
+  @Get("/updateAccessToken")
   async updateAccessToken(@Req() request: RequestWithUser) {
-    const accessTokenCookie = this.authService.generateAndGetCookieJwtAccessToken(
-      request.user.id
-    );
-    request.res.setHeader("Set-Cookie", accessTokenCookie);
-    return request.user;
+    return this.authService.generateAccessToken(request.user.id)
   }
 
   @UseGuards(JwtAuthenticationGuard)
@@ -80,6 +68,5 @@ export class AuthenticationController {
   @HttpCode(200)
   async logout(@Req() request: RequestWithUser) {
     await this.usersService.removeRefreshToken(request.user.id);
-    request.res.setHeader("Set-Cookie", this.authService.getCookieForLogOut());
   }
 }

@@ -63,34 +63,7 @@ export class AuthenticationService {
     }
   }
 
-  public getCookiesJwt(tokenDto: TokenDto): string[] {
-    const { accessToken, refreshToken } = tokenDto;
-    return [
-      this.getCookieJwtAccessToken(accessToken),
-      this.getCookieJwtRefreshToken(refreshToken)
-    ];
-  }
-
-  public getCookieJwtAccessToken(token: string): string {
-    return `AccessToken=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get("JWT_ACCESS_TOKEN_EXPIRATION_TIME")}`;
-  }
-
-  public getCookieJwtRefreshToken(token: string): string {
-    return `RefreshToken=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get("JWT_REFRESH_TOKEN_EXPIRATION_TIME")}`;
-  }
-
-  public generateAndGetCookieJwtAccessToken(userId: TUserId): string {
-    return this.getCookieJwtAccessToken(this.generateAccessToken(userId));
-  }
-
-  public getCookieForLogOut() {
-    return [
-      "AccessToken=; HttpOnly; Path=/; Max-Age=0",
-      "RefreshToken=; HttpOnly; Path=/; Max-Age=0"
-    ];
-  }
-
-  private generateTokens(userId: TUserId): TokenDto {
+  public generateTokens(userId: TUserId): TokenDto {
     return {
       accessToken: this.generateAccessToken(userId),
       refreshToken: this.generateRefreshToken(userId),
@@ -98,14 +71,14 @@ export class AuthenticationService {
     };
   }
 
-  private generateRefreshToken(userId: TUserId): string {
+  public generateRefreshToken(userId: TUserId): string {
     return this.jwtService.sign({ userId }, {
       secret: this.configService.get("JWT_REFRESH_TOKEN_SECRET"),
       expiresIn: `${this.configService.get("JWT_REFRESH_TOKEN_EXPIRATION_TIME")}s`
     });
   }
 
-  private generateAccessToken(userId: TUserId): string {
+  public generateAccessToken(userId: TUserId): string {
     return this.jwtService.sign({ userId }, {
       secret: this.configService.get("JWT_ACCESS_TOKEN_SECRET"),
       expiresIn: `${this.configService.get("JWT_ACCESS_TOKEN_EXPIRATION_TIME")}s`
