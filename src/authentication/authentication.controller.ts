@@ -36,7 +36,7 @@ export class AuthenticationController {
     await this.usersService.setCurrentRefreshToken(
       tokenDto.refreshToken, tokenDto.userId
     );
-    res.status(HttpStatus.CREATED).send(tokenDto);
+    res.status(HttpStatus.OK).send(tokenDto);
   }
 
   @Post("/registration")
